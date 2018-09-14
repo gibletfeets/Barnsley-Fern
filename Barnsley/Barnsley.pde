@@ -12,6 +12,7 @@ float matrices[][][] = {{{ 0   , 0   },
 
 float coefficients[] = {0, 1.60, 1.60, 0.44};
 vec2 plotPoint;
+float displayScale = 1.0/12.0;
 int histogram[] = new int[1000*1000];
 
 
@@ -129,7 +130,7 @@ void draw()
     stroke(255);
     line(20+i*2,100,20+i*2,100-lineLength);
   }
-  String outputString = "Percentiles: ";
+  String outputString = "Percentiles from a sample size of " + str(outputArray.length) + ": ";
   for (int i = 9; i <= 89; i+= 10)
   {
     outputString += str(percentiles[i]) + ' ';
