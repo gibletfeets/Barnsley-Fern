@@ -12,7 +12,6 @@ float matrices[][][] = {{{ 0   , 0   },
 
 float coefficients[] = {0, 1.60, 1.60, 0.44};
 vec2 plotPoint;
-float displayScale = 1.0/12.0;
 int histogram[] = new int[1000*1000];
 
 
@@ -32,11 +31,7 @@ void setup()
 int max = 0;
 void draw()
 {
-  stroke(0,200,0,100);
-  translate(width/2,height);
-  rotate(TAU/2);
-  scale(height*displayScale,height*displayScale);
-  strokeWeight(0.5/(height*displayScale));
+  clear();
 
   
   for(int iterations = 0; iterations < 1000; iterations++)
@@ -89,8 +84,12 @@ void draw()
   int q4 = (outputArray[5*outputArray.length/8] + outputArray[5*outputArray.length/8 + 1])/2;
   int q5 = (outputArray[3*outputArray.length/4] + outputArray[3*outputArray.length/4 + 1])/2;
   int q6 = (outputArray[7*outputArray.length/8] + outputArray[7*outputArray.length/8 + 1])/2;
-  println(str(q0) + ' ' + str(q1) + ' ' + str(q2) + ' ' + str(q3) + ' ' + str(q4) + ' ' + str(q5) + ' ' + str(q6));
-    loadPixels();
+  int[] percentiles = new int[99];
+  for (int i = 0; i < 99; i++)
+  {
+    percentiles[i] = outputArray[(i+1) * outputArray.length/100];
+  }
+  loadPixels();
   for(int i = 0; i < 1000*1000; i++)
   {
            if (histogram[histogram.length-i-1] == 0)
@@ -123,4 +122,17 @@ void draw()
     }
   }
   updatePixels();
+  for (int i = 0; i < 98; i++)
+  {
+    float lineLength = map(percentiles[i],percentiles[0],percentiles[98],0,100);
+    rectMode(CORNER);
+    stroke(255);
+    line(20+i*2,100,20+i*2,100-lineLength);
+  }
+  String outputString = "Percentiles: ";
+  for (int i = 9; i <= 89; i+= 10)
+  {
+    outputString += str(percentiles[i]) + ' ';
+  }
+  println(outputString);
 }
